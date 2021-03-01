@@ -27,20 +27,6 @@ exports.userById =(req,res,next,id)=>
     }
     )
 };
-exports.limit = (req,res,next,id) =>
-{
-    console.log("id value",id)
-       
-        req.profile = id
-        next()
-};
-exports.page = (req,res,next,id) =>
-{
-    console.log("id value",id)
-   
-    req.profile = id
-    next()
-};
 exports.createEmployee = async(req,res)=> 
 {
     console.log("req.boyd",req.param)
@@ -53,11 +39,16 @@ exports.createEmployee = async(req,res)=>
             })
 }
 exports.allEmployee = async(req,res) => 
-{   console.log(req.params.limit,req.params.page) 
+{  
     let temp={};
+    let temp2={};
+    let counter=0;
     let k = 0;
-    let pagelimit = req.params.limit;
-    let pageNum = req.params.page;
+    let pagelimit = req.query.limit;
+    let pageNum = req.query.page;
+    console.log("query",req.query.limit)
+    console.log("query2",req.query.page)
+
      Post.find((err,users)=>
     {
         if(err){
@@ -66,19 +57,26 @@ exports.allEmployee = async(req,res) =>
                 })
     }
     console.log("inside",req.params.limit,req.params.page) 
-    for(let i = 0 ; i < pageNum ; i++)                          //page param
+    for(let i = 0 ; i <= pageNum ; i++)                          //page param
     {
+         
         for( let j = 0 ; j < pagelimit; j++ )                   //limit param
         {
             temp[k] = users[k]
              k++;
+             if( i == pageNum)
+             {
+                 console.log("true comp",counter,"temp[k]",temp[k],"k",k)
+                temp2[counter]= users[k]
+
+                counter++;
+             }
         }
-       let check = i +1;
-       temp[k]= "page break:"+check;
-       k++;                                                      //k->no.of employee visible so far
+                                                //k->no.of employee visible so far
     }
     console.log("temp are",temp)
-          res.json({temp});
+    console.log("temp2 are",temp2)
+          res.json({temp2});
      });
 
  };
@@ -102,10 +100,20 @@ exports.getSingleEmployee = (req,res) =>
     return res.json(req.profile)
 };
 
-exports.sortbyAge = (req,res) => 
+exports.sortbyValue = (req,res) => 
 {   
+    let sortSalary = req.query.salary;
+    let sortAge = req.query.age;
+    let sortName = req.query.name;
+    if( sortAge == 0)
+         sortAge= 1;
+    if( sortSalary == 0)
+        sortSalary= 1;
+    if( sortName == 0)
+        sortName= 1;    
+    console.log("sortSalary",sortSalary,"sortAge",sortAge,"sortName",sortName)  //-1=desc,1=ascending(default)
     let db = mongoose.connection;
-    let mysort = { age: 1 };
+    let mysort = { age: sortAge ,    salary: sortSalary,   name: sortName };
     let employeeObject = db.model('employee', employeeSchema);
     employeeObject.find({}, function (err, result) {
             if (err) {

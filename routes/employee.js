@@ -9,20 +9,23 @@ router.post('/createEmployee',userController.requireSignin,validator.createEmplo
 //API for viewing all Employees
 router.get("/allEmployees",userController.requireSignin,employeeController.allEmployees);
 //API for Find Employee by name
-router.get("/allEmployee/:limit/:page",userController.requireSignin,employeeController.allEmployee);
-router.param("limit",employeeController.limit);
-router.param("page",employeeController.page);
+router.get("/allEmployee",userController.requireSignin,employeeController.allEmployee);
+
 
 router.get("/getEmployeebyName/:userId",userController.requireSignin,employeeController.getSingleEmployee);
 router.param("userId",employeeController.userById);
 //API for Delete employee by ID
 router.delete("/delete_employee/:userId",userController.requireSignin,employeeController.deleteUser)
 //API for sorting Employees by age
-router.get("/sort_age",userController.requireSignin,employeeController.sortbyAge)
+router.get("/sortby",userController.requireSignin,employeeController.sortbyValue)
 //API for sorting Employees by age salary
+
+
+
+
 router.get("/sort_salary",userController.requireSignin,employeeController.sortbySalary)
-//API for sorting Employees by age name
-router.get("/sort_name",userController.requireSignin,employeeController.sortbyName)
+// //API for sorting Employees by age name
+// router.get("/sort_name",userController.requireSignin,employeeController.sortbyName)
 
 
 module.exports = router;
