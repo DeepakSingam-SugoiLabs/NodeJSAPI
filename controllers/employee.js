@@ -27,9 +27,23 @@ exports.userById =(req,res,next,id)=>
     }
     )
 };
-
+exports.limit = (req,res,next,id) =>
+{
+    console.log("id value",id)
+       
+        req.profile = id
+        next()
+};
+exports.page = (req,res,next,id) =>
+{
+    console.log("id value",id)
+   
+    req.profile = id
+    next()
+};
 exports.createEmployee = async(req,res)=> 
 {
+    console.log("req.boyd",req.param)
     const userExists = await Post.findOne({email: req.body.email})
             if(userExists)
                   return res.status(403).json({ error:"Employee Email is taken!"})
@@ -38,18 +52,49 @@ exports.createEmployee = async(req,res)=>
                   res.status(200).json({ message:result });
             })
 }
-
-exports.allEmployees = (req,res) => 
-{
-    Post.find((err,users)=>
+exports.allEmployee = async(req,res) => 
+{   console.log(req.params.limit,req.params.page) 
+    let temp={};
+    let k = 0;
+    let pagelimit = req.params.limit;
+    let pageNum = req.params.page;
+     Post.find((err,users)=>
     {
         if(err){
-            return res.status(400).json({
+                return res.status(400).json({
                 error:err
-            })
+                })
+    }
+    console.log("inside",req.params.limit,req.params.page) 
+    for(let i = 0 ; i < pageNum ; i++)                          //page param
+    {
+        for( let j = 0 ; j < pagelimit; j++ )                   //limit param
+        {
+            temp[k] = users[k]
+             k++;
         }
-        res.json({users});
-    });
+       let check = i +1;
+       temp[k]= "page break:"+check;
+       k++;                                                      //k->no.of employee visible so far
+    }
+    console.log("temp are",temp)
+          res.json({temp});
+     });
+
+ };
+exports.allEmployees = (req,res) => 
+{  
+     Post.find((err,users)=>
+                {
+                    if(err){
+                            return res.status(400).json({
+                            error:err
+                            })
+                }      
+                console.log("users are",users)
+                      res.json({users});
+                 });
+   
 };
 
 exports.getSingleEmployee = (req,res) => 
@@ -61,8 +106,8 @@ exports.sortbyAge = (req,res) =>
 {   
     let db = mongoose.connection;
     let mysort = { age: 1 };
-    let customerObject = db.model('employee', employeeSchema);
-    customerObject.find({}, function (err, result) {
+    let employeeObject = db.model('employee', employeeSchema);
+    employeeObject.find({}, function (err, result) {
             if (err) {
                         return res.status(400).json({
                              error:err
@@ -77,8 +122,8 @@ exports.sortbySalary = (req,res) =>
 {   
     let db = mongoose.connection;
     let mysort = { salary: 1 };
-    let customerObject = db.model('employee', employeeSchema);
-    customerObject.find({}, function (err, result) {
+    let employeeObject = db.model('employee', employeeSchema);
+    employeeObject.find({}, function (err, result) {
         if (err) {
             return res.status(400).json({
                              error:err
@@ -92,8 +137,8 @@ exports.sortbySalary = (req,res) =>
 exports.sortbyName = (req,res) => 
 {   
     let mysort = { name: 1 };
-    let customerObject = db.model('employee', employeeSchema);
-    customerObject.find({}, function (err, result) 
+    let employeeObject = db.model('employee', employeeSchema);
+    employeeObject.find({}, function (err, result) 
       {
         if (err) {
                   return res.status(400).json({error:err}) 

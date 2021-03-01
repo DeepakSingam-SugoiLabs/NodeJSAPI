@@ -9,6 +9,10 @@ router.post('/createEmployee',userController.requireSignin,validator.createEmplo
 //API for viewing all Employees
 router.get("/allEmployees",userController.requireSignin,employeeController.allEmployees);
 //API for Find Employee by name
+router.get("/allEmployee/:limit/:page",userController.requireSignin,employeeController.allEmployee);
+router.param("limit",employeeController.limit);
+router.param("page",employeeController.page);
+
 router.get("/getEmployeebyName/:userId",userController.requireSignin,employeeController.getSingleEmployee);
 router.param("userId",employeeController.userById);
 //API for Delete employee by ID
