@@ -14,13 +14,17 @@ mongoose.connection.on("error",err=>{
     console.log(`db connection error ${err.message}`);
 });
 
-const postRoutes = require('./routes/users');
+const userRoutes = require('./routes/users');
 const empRoutes = require('./routes/employee');
-
+//middleware
 app.use(morgan("dev"));
+//parsing body
 app.use(bodyparser.json());
+//validate body data
 app.use(expressValidator());
-app.use('/',postRoutes);
+//Route for user
+app.use('/',userRoutes);
+//Route for Employee
 app.use('/',empRoutes);
 const port = process.env.PORT || 8080;
 app.listen(port,()=>{
