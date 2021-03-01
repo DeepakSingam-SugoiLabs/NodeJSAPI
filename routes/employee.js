@@ -12,6 +12,8 @@ router.get("/getEmployeebyName/:userId",userController.requireSignin,employeeCon
 router.param("userId",employeeController.userById);
 router.delete("/delete_employee/:userId",userController.requireSignin,employeeController.deleteUser)
 router.get("/sort_age",userController.requireSignin,employeeController.sortbyAge)
+router.get("/sort_salary",userController.requireSignin,employeeController.sortbySalary)
+router.get("/sort_name",userController.requireSignin,employeeController.sortbyName)
 
 
 module.exports = router;

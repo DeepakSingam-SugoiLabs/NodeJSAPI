@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const _ = require('lodash')
 const mongoose = require('mongoose');
+const employeeSchema = mongoose.Schema();
 
 // exports.userById =(req,res,next,id)=>
 // {
@@ -78,7 +79,6 @@ exports.sortbyAge = (req,res) =>
     let db = mongoose.connection;
     let mysort = { age: 1 };
     console.log("POSt",Post)
-    const employeeSchema = mongoose.Schema();
 
     let customerObject = db.model('employee', employeeSchema);
     customerObject.find({}, function (err, result) {
@@ -110,6 +110,41 @@ exports.sortbyAge = (req,res) =>
 
 };
 
+exports.sortbySalary = (req,res) => 
+
+{   
+    let db = mongoose.connection;
+    let mysort = { salary: 1 };
+    console.log("POSt",Post)
+    let customerObject = db.model('employee', employeeSchema);
+    customerObject.find({}, function (err, result) {
+        if (err) {
+            return res.status(400).json({
+                             error:err
+        }) }
+        else {
+            return res.json(result)
+        }
+    }).sort(mysort);
+};
+
+exports.sortbyName = (req,res) => 
+
+{   
+    let db = mongoose.connection;
+    let mysort = { name: 1 };
+    console.log("POSt",Post)
+    let customerObject = db.model('employee', employeeSchema);
+    customerObject.find({}, function (err, result) {
+        if (err) {
+            return res.status(400).json({
+                             error:err
+        }) }
+        else {
+            return res.json(result)
+        }
+    }).sort(mysort);
+};
 exports.deleteUser = (req,res,next) => 
 {   
     let user = req.profile
