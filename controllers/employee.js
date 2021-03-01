@@ -7,8 +7,8 @@ const Post = require('../models/employee')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const _ = require('lodash')
+const mongoose = require('mongoose');
 
-const { roles } = require('../roles')
 // exports.userById =(req,res,next,id)=>
 // {
 //     Post.findById(id).exec((err,user)=>
@@ -73,8 +73,41 @@ exports.getSingleEmployee = (req,res) =>
 };
 
 exports.sortbyAge = (req,res) => 
-{
-    return res.json(req.profile)
+
+{   
+    let db = mongoose.connection;
+    let mysort = { age: 1 };
+    console.log("POSt",Post)
+    const employeeSchema = mongoose.Schema();
+
+    let customerObject = db.model('employee', employeeSchema);
+    customerObject.find({}, function (err, result) {
+
+        if (err) {
+
+            return res.status(400).json({
+                             error:err
+        }) }
+        else {
+
+            return res.json(result)
+
+        }
+
+    }).sort(mysort);
+    // dbo.collection("employees").find().sort(mysort)(function(err, result) {
+
+    //     if (err)
+    //     {
+    //         return res.status(400).json({
+    //             error:err
+    //     })
+    //    }
+    //     console.log(result);
+    //     db.close();
+    // })
+    // return res.json(result)
+
 };
 
 exports.deleteUser = (req,res,next) => 

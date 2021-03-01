@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const {ObjectId} = mongoose.Schema
-const postSchema = new mongoose.Schema({
+const employeeSchema = new mongoose.Schema({
     name:{
         type:String,
         required:"title is required",
@@ -38,4 +38,4 @@ const postSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("Employee", postSchema);
+module.exports = mongoose.model("Employee", employeeSchema);
