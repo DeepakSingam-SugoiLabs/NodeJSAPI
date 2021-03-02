@@ -19,7 +19,7 @@ exports.createUser = async(req,res)=>
                       })
    const post = new Post(req.body);
    const salt = await bcrypt.genSalt(10);
-   const hashedPassword = await bcrypt.hash(req.body.password, salt);
+   const hashedPassword = await bcrypt.hash(req.body.password, salt);                       //encryt password
    post.password = hashedPassword
         post.save ((err,result)=>{
                      res.status(200).json({ message:result+'succeesfully signed up' });
@@ -60,6 +60,6 @@ exports.verifyUser = async(req,res)=> {
             }
  }
 
- exports.requireSignin = expressJwt({
+ exports.requireSignin = expressJwt({                               //validate JWT
     secret: process.env.JWT_SECRET,
 });

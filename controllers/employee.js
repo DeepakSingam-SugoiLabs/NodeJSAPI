@@ -105,23 +105,46 @@ exports.sortbyValue = (req,res) =>
     let sortSalary = req.query.salary;
     let sortAge = req.query.age;
     let sortName = req.query.name;
+    let pagelimit = req.query.limit;
+    let pageNum = req.query.page;
+    let temp={};
+    let temp2={};
+    let counter=0;
+    let k = 0;
     if( sortAge == 0)
          sortAge= 1;
     if( sortSalary == 0)
         sortSalary= 1;
     if( sortName == 0)
         sortName= 1;    
-    console.log("sortSalary",sortSalary,"sortAge",sortAge,"sortName",sortName)  //-1=desc,1=ascending(default)
+    console.log("sortSalary",sortSalary,"sortAge",sortAge,"sortName",sortName,"pageNum",pageNum,"pagelimit",pagelimit)  //-1=desc,1=ascending(default)
     let db = mongoose.connection;
     let mysort = { age: sortAge ,    salary: sortSalary,   name: sortName };
     let employeeObject = db.model('employee', employeeSchema);
-    employeeObject.find({}, function (err, result) {
+    employeeObject.find({}, function (err, users) {                           //users->output to be displayed
             if (err) {
                         return res.status(400).json({
                              error:err
                      }) }
              else {
-                        return res.json(result)
+                for(let i = 0 ; i <= pageNum ; i++)                          //page param
+                {
+                     
+                    for( let j = 0 ; j < pagelimit; j++ )                   //limit param
+                    {
+                        temp[k] = users[k]
+                         k++;
+                         if( i == pageNum)
+                         {
+                             console.log("true comp",counter,"temp[k]",temp[k],"k",k)
+                            temp2[counter]= users[k]
+            
+                            counter++;
+                         }
+                    }
+                                                            //k->no.of employee visible so far
+                }
+                        return res.json(temp2)
                     }
     }).sort(mysort);
 };
